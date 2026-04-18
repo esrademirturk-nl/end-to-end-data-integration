@@ -1,0 +1,49 @@
+-- =============================================
+-- Phase 1: MySQL Queries - Sakila Database
+-- =============================================
+
+-- 1. Top 10 most rented films
+SELECT f.title, COUNT(r.inventory_id) AS rental_count
+FROM film f
+JOIN inventory i ON f.film_id = i.film_id
+JOIN rental r ON r.inventory_id = i.inventory_id
+GROUP BY f.film_id
+ORDER BY rental_count DESC
+LIMIT 10;
+
+-- 2. Top 10 customers by total payment
+SELECT CONCAT(c.first_name,' ',c.last_name) AS customer_name,
+       SUM(p.amount) AS total_spent
+FROM customer c
+JOIN payment p ON c.customer_id = p.customer_id
+GROUP BY c.customer_id
+ORDER BY total_spent DESC
+LIMIT 10;
+
+-- 3. Number of films by category
+SELECT cat.name AS category, COUNT(f.film_id) AS film_count
+FROM category cat
+JOIN film_category fc ON cat.category_id = fc.category_id
+JOIN film f ON fc.film_id = f.film_id
+GROUP BY cat.category_id, cat.name
+ORDER BY film_count DESC;
+
+-- 4. Number of rentals by country
+SELECT co.country, COUNT(r.rental_id) AS rental_count
+FROM country co
+JOIN city ci ON co.country_id = ci.country_id
+JOIN address a ON ci.city_id = a.city_id
+JOIN customer cu ON a.address_id = cu.address_id
+JOIN rental r ON cu.customer_id = r.customer_id
+GROUP BY co.country_id, co.country
+ORDER BY rental_count DESC
+LIMIT 20;
+
+-- 5. Monthly total revenue (2005)
+SELECT YEAR(payment_date) AS year,
+       MONTH(payment_date) AS month,
+       SUM(amount) AS total_revenue
+FROM payment
+WHERE YEAR(payment_date) = 2005
+GROUP BY year, month
+ORDER BY month;

@@ -1,0 +1,34 @@
+-- =============================================
+-- Phase 2: Snowflake Queries - Sakila Database
+-- =============================================
+
+-- Setup
+USE WAREHOUSE SAKILA_WH;
+USE DATABASE SAKILA_DB;
+USE SCHEMA SAKILA_SCHEMA;
+
+-- 1. Monthly total revenue (2005)
+SELECT 
+    MONTH(PAYMENT_DATE) AS month,
+    SUM(AMOUNT) AS total_revenue
+FROM PAYMENT
+WHERE YEAR(PAYMENT_DATE) = 2005
+GROUP BY month
+ORDER BY month;
+
+-- 2. Top 10 customers by total payment
+SELECT 
+    CUSTOMER_ID,
+    SUM(AMOUNT) AS total_payment,
+    COUNT(*) AS payment_count
+FROM PAYMENT
+GROUP BY CUSTOMER_ID
+ORDER BY total_payment DESC
+LIMIT 10;
+
+-- 3. Daily rental count
+SELECT DATE(RENTAL_DATE) AS rental_date,
+       COUNT(RENTAL_ID) AS rental_count
+FROM RENTAL
+GROUP BY rental_date
+ORDER BY rental_date DESC;

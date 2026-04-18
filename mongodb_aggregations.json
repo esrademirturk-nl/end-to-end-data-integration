@@ -1,0 +1,21 @@
+// Phase 3: MongoDB Aggregation Queries - Sakila Database
+
+// 1. Top 10 customers by rental count (rentals collection)
+[
+  { "$group": { "_id": "$customer_id", "rental_count": { "$sum": 1 } } },
+  { "$sort": { "rental_count": -1 } },
+  { "$limit": 10 }
+]
+
+// 2. Top 10 customers by total payment (payments collection)
+[
+  { "$group": { "_id": "$customer_id", "total_payment": { "$sum": "$amount" } } },
+  { "$sort": { "total_payment": -1 } },
+  { "$limit": 10 }
+]
+
+// 3. Rental count by staff (rentals collection)
+[
+  { "$group": { "_id": "$staff_id", "rental_count": { "$sum": 1 } } },
+  { "$sort": { "rental_count": -1 } }
+]
